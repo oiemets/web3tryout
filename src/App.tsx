@@ -1,26 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { Header, List } from './components';
+import Web3 from 'web3';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App = () => {
+	useEffect(() => {
+		loadData();
+	}, []);
+	const [accounts, setAccounts] = useState<string[]>();
+	const loadData = async () => {
+		const web3 = new Web3('http://localhost:7545');
+		// const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
+		const accounts = await web3.eth.getAccounts();
+		// const network = await web3.eth.net.getNetworkType();
 
-export default App;
+		setAccounts(accounts);
+	};
+
+	return (
+		<>
+			<Header />
+			<List data={accounts ?? []} />
+		</>
+	);
+};
